@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>MediConnect Kayıt Sayfası</title>
+   <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+   <link rel="stylesheet" href="styles.css">
+   <link rel="icon" type="image/x-icon" href="./public/favicon.ico">
+</head>
+
+<body>
+   <script src="/public/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
+   <script src="./node_modules/jquery/dist/jquery.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+   <div class="container d-flex justify-content-center align-items-center vh-100 mw-100">
+      <div class="text-center">
+         <img src="./public/logo.png" class="mt-4" alt="Logo" width="250" height="250">
+         <h2 class="mb-4"><b>Kayıt Ol</b></h2>
+         <form id="signup-form" class="mt-4">
+            <div class="form-group mb-1">
+               <input type="email" class="form-control" id="email" placeholder="ad.soyad@std.ankaramedipol.edu.tr" required>
+            </div>
+            <div class="form-group mb-1">
+               <input type="password" class="form-control" id="password" placeholder="Şifre" required>
+            </div>
+            <div class="form-group mb-1">
+               <input type="name" class="form-control" id="name" placeholder="İsim Soyisim" required>
+            </div>
+            <div class="form-group mb-1">
+               <select class="form-control" id="faculty" required>
+                  <option value="" disabled selected>Fakültenizi Seçiniz</option>
+                  <option value="Sağlık Bilimleri Enstitüsü">Sağlık Bilimleri Enstitüsü</option>
+                  <option value="Sosyal Bilimler Enstitüsü">Sosyal Bilimler Enstitüsü</option>
+                  <option value="Adalet Meslek Yüksekokulu">Adalet Meslek Yüksekokulu</option>
+                  <option value="Sağlık Hizmetleri Meslek Yüksekokulu">Sağlık Hizmetleri Meslek Yüksekokulu</option>
+                  <option value="Meslek Yüksekokulu">Meslek Yüksekokulu</option>
+                  <option value="Diş Hekimliği Fakültesi">Diş Hekimliği Fakültesi</option>
+                  <option value="Eczacılık Fakültesi">Eczacılık Fakültesi</option>
+                  <option value="Güzel Sanatlar, Tasarım ve Mimarlık Fakültesi">Güzel Sanatlar, Tasarım ve Mimarlık
+                     Fakültesi</option>
+                  <option value="Hukuk Fakültesi">Hukuk Fakültesi</option>
+                  <option value="İktisadi, İdari ve Sosyal Bilimler Fakültesi">İktisadi, İdari ve Sosyal Bilimler
+                     Fakültesi</option>
+                  <option value="İletişim Fakültesi">İletişim Fakültesi</option>
+                  <option value="Sağlık Bilimleri Fakültesi">Sağlık Bilimleri Fakültesi</option>
+                  <option value="Mühendislik ve Doğa Bilimleri Fakültesi">Mühendislik ve Doğa Bilimleri Fakültesi
+                  </option>
+                  <option value="Siyasal Bilgiler Fakültesi">Siyasal Bilgiler Fakültesi</option>
+                  <option value="Tıp Fakültesi">Tıp Fakültesi</option>
+               </select>
+            </div>
+            <div class="form-group mb-1">
+               <select class="form-control" id="department" required>
+                  <option value="" disabled selected>Bölümünüzü Seçiniz</option>
+               </select>
+            </div>
+            <div class="form-group mb-1">
+               <select class="form-control" id="year" required>
+                  <option value="" disabled selected>Sınıfınızı Seçiniz</option>
+               </select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4" id="reqbutton">Kaydol</button>
+         </form>
+         <p class="mt-4">Hesabın var mı? <a href="login.html">Giriş Yap</a></p>
+      </div>
+   </div>
+
+   <script>
+      /* Fakülte ve bölüm seçimi için JavaScript kodu */
+
+      document.addEventListener('DOMContentLoaded', function () {
+
+         var facultySelect = document.getElementById('faculty');
+         var departmentSelect = document.getElementById('department');
+         var yearSelect = document.getElementById('year');
+
+         var departmentsByFaculty = {
+            'Sağlık Bilimleri Enstitüsü': ['Beslenme ve Diyetetik'],
+            'Sosyal Bilimler Enstitüsü': ['Klinik Psikoloji'],
+            'Adalet Meslek Yüksekokulu': ['Adalet'],
+            'Sağlık Hizmetleri Meslek Yüksekokulu': [
+               'Ağız ve Diş Sağlığı',
+               'Ameliyathane Hizmetleri',
+               'Anestezi',
+               'Biyomedikal Cihaz Teknolojisi',
+               'Diş Protez Teknolojisi',
+               'Diyaliz',
+               'Fizyoterapi',
+               'İlk ve Acil Yardım',
+               'Odyometri',
+               'Optisyenlik',
+               'Radyoterapi',
+               'Sağlık Turizmi İşletmeciliği',
+               'Tıbbi Görüntüleme Teknikleri',
+               'Tıbbi Laboratuvar Teknikleri'
+            ],
+            'Meslek Yüksekokulu': ['Bilgisayar Programcılığı', 'İç Mekan Tasarımı', 'İnşaat Teknolojisi', 'Pazarlama ve Reklamcılık'],
+            'Diş Hekimliği Fakültesi': ['Diş Hekimliği (Türkçe)', 'Diş Hekimliği (İngilizce)'],
+            'Eczacılık Fakültesi': ['Eczacılık (Türkçe)', 'Eczacılık (İngilizce)'],
+            'Güzel Sanatlar, Tasarım ve Mimarlık Fakültesi': ['Gastronomi ve Mutfak Sanatları (İngilizce)', 'İç Mimarlık ve Çevre Tasarımı'],
+            'Hukuk Fakültesi': ['Hukuk'],
+            'İktisadi, İdari ve Sosyal Bilimler Fakültesi': [
+               'Psikoloji (Türkçe)',
+               'Psikoloji (İngilizce)',
+               'Uluslararası Ticaret ve Finansman (Türkçe)',
+               'Uluslararası Ticaret ve Finansman (İngilizce)',
+               'Yönetim Bilişim Sistemleri'
+            ],
+            'İletişim Fakültesi': ['Halkla İlişkiler ve Reklamcılık'],
+            'Sağlık Bilimleri Fakültesi': [
+               'Beslenme ve Diyetetik',
+               'Dil ve Konuşma Terapisi',
+               'Ebelik',
+               'Ergoterapi',
+               'Fizyoterapi ve Rehabilitasyon',
+               'Hemşirelik (Türkçe)',
+               'Hemşirelik (İngilizce)',
+               'Odyoloji'
+            ],
+            'Mühendislik ve Doğa Bilimleri Fakültesi': ['Bilgisayar Mühendisliği (İngilizce)', 'Elektrik-Elektronik Mühendisliği (İngilizce)'],
+            'Siyasal Bilgiler Fakültesi': ['Siyaset Bilimi ve Uluslararası İlişkiler (İngilizce)'],
+            'Tıp Fakültesi': ['Tıp (Türkçe)', 'Tıp (İngilizce)']
+         };
+
+         // Kullanıcının okuduğu fakülteye göre sınıfların atanması
+
+         var yearsByFaculty = {
+            'Sağlık Bilimleri Enstitüsü': { 'Lisansüstü 1. Sınıf': 'Lisansüstü 1. Sınıf', 'Lisansüstü 2. Sınıf': 'Lisansüstü 2. Sınıf' },
+            'Sosyal Bilimler Enstitüsü': { 'Lisansüstü 1. Sınıf': 'Lisansüstü 1. Sınıf', 'Lisansüstü 2. Sınıf': 'Lisansüstü 2. Sınıf' },
+            'Adalet Meslek Yüksekokulu': { '1. Sınıf': '1. Sınıf', '2. Sınıf': '2. Sınıf' },
+            'Sağlık Hizmetleri Meslek Yüksekokulu': { '1. Sınıf': '1. Sınıf', '2. Sınıf': '2. Sınıf' },
+            'Meslek Yüksekokulu': { '1. Sınıf': '1. Sınıf', '2. Sınıf': '2. Sınıf' },
+            'Diş Hekimliği Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf',
+               '5. Sınıf': '5. Sınıf'
+            },
+            'Eczacılık Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf',
+               '5. Sınıf': '5. Sınıf'
+            },
+            'Güzel Sanatlar, Tasarım ve Mimarlık Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf'
+            },
+            'Hukuk Fakültesi': { '1. Sınıf': '1. Sınıf', '2. Sınıf': '2. Sınıf', '3. Sınıf': '3. Sınıf', '4. Sınıf': '4. Sınıf' },
+            'İktisadi, İdari ve Sosyal Bilimler Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf'
+            },
+            'İletişim Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf'
+            },
+            'Sağlık Bilimleri Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf'
+            },
+            'Mühendislik ve Doğa Bilimleri Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf'
+            },
+            'Siyasal Bilgiler Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf'
+            },
+            'Tıp Fakültesi': {
+               'Hazırlık Sınıfı': 'Hazırlık Sınıfı',
+               '1. Sınıf': '1. Sınıf',
+               '2. Sınıf': '2. Sınıf',
+               '3. Sınıf': '3. Sınıf',
+               '4. Sınıf': '4. Sınıf',
+               '5. Sınıf': '5. Sınıf',
+               '6. Sınıf': '6. Sınıf'
+            }
+         };
+
+         facultySelect.addEventListener('change', function () {
+            var selectedFaculty = this.value;
+
+            // Fakülteye gçre bölümlerin seçilmesi
+            var departments = departmentsByFaculty[selectedFaculty] || [];
+
+            // Bölümlerin temizlenmesi
+            departmentSelect.innerHTML = '';
+
+            // Bölüm seçimi için varsayılan seçenek ekleme
+            var defaultDepartmentOption = document.createElement('option');
+            defaultDepartmentOption.value = '';
+            defaultDepartmentOption.textContent = 'Select Your Department';
+            defaultDepartmentOption.disabled = true;
+            defaultDepartmentOption.selected = true;
+            departmentSelect.appendChild(defaultDepartmentOption);
+
+            // Fakülteye göre bölümlerin doldurulması
+            departments.forEach(function (department) {
+               var option = document.createElement('option');
+               option.value = department;
+               option.textContent = department;
+               departmentSelect.appendChild(option);
+            });
+
+            // Yılların güncellenmesi
+            var years = yearsByFaculty[selectedFaculty] || {};
+
+            // Yıl seçeneğinin temizlenmesi
+            yearSelect.innerHTML = '';
+
+            // Varsayılan yıl seçeneği ekleme
+            var defaultYearOption = document.createElement('option');
+            defaultYearOption.value = '';
+            defaultYearOption.textContent = 'Select Your Year';
+            defaultYearOption.disabled = true;
+            defaultYearOption.selected = true;
+            yearSelect.appendChild(defaultYearOption);
+
+            // Fakülteye göre yılların doldurulması
+            for (var year in years) {
+               if (years.hasOwnProperty(year)) {
+                  var option = document.createElement('option');
+                  option.value = year;
+                  option.textContent = years[year];
+                  yearSelect.appendChild(option);
+               }
+            }
+         });
+
+      });
+   </script>
+
+   <script src="/signup.js"></script>
+</body>
+
+</html>

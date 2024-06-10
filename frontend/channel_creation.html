@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>MediConnect Kanal Seçimi</title>
+   <link rel="stylesheet" href="styles.css">
+   <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+   <link rel="icon" type="image/x-icon" href="./public/favicon.ico">
+   <script src="./node_modules/jquery/dist/jquery.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+</head>
+
+<body>
+   <div class="channel-selection-container" id="create-channel-modal">
+      <h4><strong>Yeni Kanal Oluştur / Katıl</strong></h4>
+      <div class="container">
+         <p id="modal-description">Kanallar, kullanıcıların iletişim kurabileceği ve birlikte çalışabileceği alt kanallardan oluşur. Hali hazırda ismi alınmamış bir kanal oluşturabilirsiniz.</p>
+      </p>
+
+         <div class="btn-group d-flex justify-content-center mb-3" role="group">
+            <button type="button" class="btn btn-outline-secondary active" id="create-tab">Oluştur</button>
+            <button type="button" class="btn btn-outline-secondary" id="join-tab">Katıl</button>
+         </div>
+         <div id="create-content">
+            <div class="form-group">   
+               <label for="create-channel-name"><strong>Kanal İçin İsim Giriniz</strong></label>
+               <input type="text" class="form-control" id="create-channel-name" placeholder="Kanal İsmi">
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+               <button class="btn btn-primary" id="create-channel-button">Oluştur</button>
+            </div>
+         </div>
+         <div id="join-content" style="display: none;">
+            <div class="form-group">
+               <label for="channel-list"><strong>Kanal Listesi</strong></label>
+               <select class="form-control" id="channel-list">
+                  <!-- Kanal seçenekleri dinamik olarak yüklenir -->
+               </select>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+               <button class="btn btn-primary" id="join-channel-button">Katıl</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <style>
+      /* Modal Styles */
+      .channel-selection-container {
+         position: fixed;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         background: white;
+         padding: 40px;
+         border-radius: 8px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+         z-index: 1000;
+         width: 600px;
+         height: 500px;
+      }
+
+      .create-channel-modal-button {
+         aspect-ratio: 1.04;
+         width: 27px;
+         fill: #666464;
+         margin-top: 23px;
+         margin-left: -10px;
+      }
+
+      .channel-list {
+         border: 1px solid rgba(151, 151, 151, 1);
+         background-color: #b7d7fc;
+         display: flex;
+         padding-bottom: 80px;
+         flex-direction: column;
+         color: #000;
+         text-align: center;
+         height: 93vh;
+         min-width: 230px;
+         overflow-y: auto;
+      }
+
+      .btn-group .btn {
+         flex: 1;
+         border-radius: 0;
+      }
+
+      .btn-group .btn.active {
+         background-color: #007bff;
+         color: white;
+      }
+
+      .d-flex.justify-content-center {
+         display: flex;
+         justify-content: center;
+      }
+
+      .d-flex.justify-content-end {
+         display: flex;
+         justify-content: flex-end;
+      }
+
+      .mb-3 {
+         margin-bottom: 1rem;
+      }
+
+      .mt-3 {
+         margin-top: 1rem;
+      }
+   </style>
+
+
+
+   <script>
+
+      $(function () {
+         // Giriş yapılmadıysa giriş sayfasına yönlendir
+         if (!localStorage.getItem("token")) {
+            window.location.href = "login.html";
+         }
+
+         // Kullanıcının üyesi veya sahibi olmadığı kanalları getirme
+         $.ajax({
+            url: "http://127.0.0.1:3002/api/get-all-channels-not-member",
+            method: "GET",
+            headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+            success: function (response) {
+               // Yanıt verilerini kanal listesine doldurma
+               $("#channel-list").empty();
+               const defaultOption = $("<option></option>")
+                  .attr("value", "")
+                  .attr("disabled", "true")
+                  .attr("selected", "true")
+                  .text("Select a Channel");
+               $("#channel-list").append(defaultOption);
+
+               const channelList = response;
+               channelList.forEach(function (channel) {
+                  const option = $('<option></option>').attr('value', channel._id).text(channel.name);
+                  $('#channel-list').append(option);
+               });
+            },
+            error: function (jqXHR) {
+               alert(jqXHR.responseJSON.error);
+            },
+         });
+
+         // Butona tıklanınca modülü ve katmanı göster
+         $('#create-channel-modal-button').click(function () {
+            $('#create-channel-overlay').fadeIn();
+            $('#create-channel-modal').fadeIn();
+         });
+
+         // Kapatma butonuna veya katmana tıklanınca modülü ve katmanı gizle
+         $('#create-channel-overlay, .close-btn').click(function () {
+            $('#create-channel-overlay').fadeOut();
+            $('#create-channel-modal').fadeOut();
+         });
+
+         // Sekme geçiş mantığı
+         $('#create-tab').click(function () {
+            $('#modal-description').text('Channels are sub-channels that users can communicate with and collaborate on. You can create a new channel with a name that has not been taken yet.');
+            $('#create-tab').addClass('active');
+            $('#join-tab').removeClass('active');
+            $('#create-content').show();
+            $('#join-content').hide();
+         });
+
+         $('#join-tab').click(function () {
+            $('#modal-description').text('You can join to channels that are public from the list.');
+            $('#join-tab').addClass('active');
+            $('#create-tab').removeClass('active');
+            $('#join-content').show();
+            $('#create-content').hide();
+         });
+
+         // "Oluştur" butonunun işlevi
+         $('#create-channel-button').click(function () {
+            const channelName = $('#create-channel-name').val();
+
+            if (channelName === "") {
+               alert("Lütfen kanal için bir isim girin!");
+               return; // Boşsa daha fazla kod çalıştırmayı engelle
+            }
+
+            // Kanal oluşturmak için API çağrısı ekle
+            $.ajax({
+               url: "http://127.0.0.1:3002/api/channel",
+               method: "POST",
+               contentType: "application/json",
+               headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
+               data: JSON.stringify({ name: channelName }),
+               success: function (response) {
+                  location.href = "dashboard.html";
+               },
+               error: function (jqXHR) {
+                  alert(jqXHR.responseJSON.error);
+               },
+            });
+         });
+
+         // "Katıl" butonunun işlevi
+         $('#join-channel-button').click(function () {
+            const selectedChannel = $('#channel-list').val();
+
+            if (!selectedChannel) {
+               alert("Lütfen kanal seçin!");
+               return;
+            }
+
+            $.ajax({
+               url: "http://127.0.0.1:3002/api/join-channel",
+               method: "PATCH",
+               headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+               data: { id: selectedChannel },
+               success: function () {
+                  alert("Kanala başarıyla katıldın!");
+                  location.href = "dashboard.html";
+               },
+               error: function (jqXHR) {
+                  alert(jqXHR.responseJSON.error);
+               },
+            });
+         });
+      });
+   </script>
+   <script src="/channel_creation.js"></script>
+   <script src="/server.js"></script>
+</body>
+
+</html>

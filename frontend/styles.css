@@ -1,0 +1,1155 @@
+/* General Styles */
+body,
+html {
+   font-family: 'Arial', sans-serif;
+   margin: 0;
+   padding: 0;
+   height: 100%;
+}
+
+/* Utility Classes */
+.text-center {
+   text-align: center;
+}
+
+/* Login and Signup Pages */
+.container {
+   background-color: #f8f9fa;
+}
+
+.input-group {
+   margin-bottom: 20px;
+}
+
+.input-group input {
+   height: 40px;
+   width: 300px;
+   padding: 10px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+}
+
+.btn-blue {
+   background-color: #007bff;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   padding: 10px 20px;
+   cursor: pointer;
+}
+
+.btn-blue:hover {
+   background-color: #0056b3;
+}
+
+.small-text {
+   font-size: 14px;
+}
+
+
+/* 404 Page */
+.error-page {
+   text-align: center;
+   padding: 50px;
+}
+
+.error-page h1 {
+   font-size: 100px;
+   color: #007bff;
+}
+
+.error-page p {
+   font-size: 20px;
+}
+
+
+
+.login-fields {
+   width: 317px;
+}
+
+.forgot-fields {
+   width: 357px;
+}
+
+
+
+/* Dashboard Page */
+
+.container-fluid {
+   background-color: #fff;
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+   /* Full height of the viewport */
+   width: 100vw;
+   /* Full width of the viewport */
+   max-height: 100vh;
+   /* Ensures container does not exceed viewport height */
+}
+
+/* Navigation Bar */
+
+.header {
+   border: 1px solid rgba(151, 151, 151, 1);
+   background-color: #0091ff;
+   display: flex;
+   margin-left: -12px;
+   gap: 10px;
+   margin-right: -12px;
+}
+
+@media (max-width: 991px) {
+   .header {
+      flex-wrap: wrap;
+   }
+}
+
+.header-content {
+   display: flex;
+   gap: 20px;
+   justify-content: space-between;
+   flex-grow: 1;
+   margin: auto 0;
+   padding: 0 20px;
+}
+
+@media (max-width: 991px) {
+   .header-content {
+      max-width: 100%;
+      flex-wrap: wrap;
+   }
+}
+
+/* Light and Dark Theme */
+.light-theme {
+   background-color: #ffffff;
+   color: #000000;
+
+}
+
+.dark-theme {
+   background-color: #202430;
+   color: #ffffff;
+}
+
+
+.invitation-button {
+   aspect-ratio: 1;
+   width: 55px;
+   height: 55px;
+   margin-right: 70px;
+   margin-left: -10px;
+   margin-top: 2px;
+}
+
+.search-bar {
+   border-radius: 20px;
+   background-color: #fbf6f6;
+   display: flex;
+   gap: 40px;
+   font-size: 15px;
+   color: #000;
+   font-weight: 400;
+   white-space: nowrap;
+   justify-content: space-between;
+   margin: auto;
+   padding: 2px 7px;
+   align-items: center;
+}
+
+@media (max-width: 991px) {
+   .search-bar {
+      white-space: initial;
+   }
+}
+
+#search-input-area {
+   height: 11px;
+   width: 100%;
+   resize: none;
+   /* Prevents resizing by the user */
+   overflow-y: auto;
+   /* Allows vertical scrolling */
+   word-wrap: break-word;
+   /* Ensures long words break to the next line */
+   padding: 10px;
+   /* Adds padding inside the textarea */
+   padding-bottom: 34px;
+   box-sizing: border-box;
+   /* Ensures padding is included in the total width/height */
+   margin: auto 0;
+   border: none;
+   /* Removes the border */
+   background: transparent;
+   /* Makes the background invisible */
+   outline: none;
+   /* Removes the default outline on focus */
+}
+
+/* Düzenleme Yetkisi Olmayan Input Box'ların Gösterimi */
+input[readonly] {
+   background-color: #e9ecef;
+   color: #6c757d;
+   cursor: not-allowed;
+}
+
+.search-button {
+   aspect-ratio: 1.11;
+   width: 20px;
+   margin-right: 9px;
+   fill: #000;
+}
+
+.user-icons {
+   display: flex;
+   gap: 10px;
+}
+
+.user-profile-icon {
+   aspect-ratio: 1.16;
+   width: 56px;
+}
+
+.notification-icon {
+   aspect-ratio: 1.02;
+   width: 60px;
+}
+
+/* ---------------- */
+
+
+/* Sidebar and Channel List */
+
+.main-content {
+   display: flex;
+   gap: 0;
+}
+
+@media (max-width: 991px) {
+   .main-content {
+      flex-wrap: wrap;
+   }
+}
+
+.sidebar {
+   border: 1px solid rgba(151, 151, 151, 1);
+   background-color: #b7d7fc;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   width: 120px;
+   min-width: 100px;
+   height: 93vh;
+   /* Make the sidebar's height fit the viewport */
+   margin-left: -12px;
+   padding: 14px 6px 80px 15px;
+   overflow-y: auto;
+   /* Allows scrolling within the sidebar if content overflows */
+}
+
+#sidebar-content {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+
+@media (max-width: 991px) {
+   .sidebar {
+      display: none;
+   }
+}
+
+
+.sidebar-channel-icon {
+   aspect-ratio: 1;
+   width: 55px;
+   margin-left: -10px;
+   margin-top: 19px;
+   cursor: pointer;
+   object-fit: cover;
+}
+
+.create-channel-modal-button {
+   aspect-ratio: 1.04;
+   width: 27px;
+   fill: #666464;
+   margin-top: 23px;
+   margin-left: -10px;
+}
+
+.channel-list {
+   border: 1px solid rgba(151, 151, 151, 1);
+   background-color: #b7d7fc;
+   display: flex;
+   padding-bottom: 80px;
+   flex-direction: column;
+   color: #000;
+   text-align: center;
+   height: 93vh;
+   min-width: 230px;
+   overflow-y: auto;
+}
+
+.channel-header {
+   border: 1px solid rgba(151, 151, 151, 1);
+   background-color: #b7d7fc;
+   justify-content: center;
+   margin: -1px 0px 0 0px;
+   padding: 20px 0;
+   border-left: none;
+   /* Make left border invisible */
+   border-right: none;
+   /* Make right border invisible */
+   font: 700 20px/25px Inter, sans-serif;
+   max-width: 100%;
+   /* Ensure it doesn't expand beyond the parent */
+   width: 100%;
+   box-sizing: border-box;
+   /* Include padding and border in the element's total width */
+   min-height: 116px;
+}
+
+@media (max-width: 991px) {
+   .channel-header {
+      padding: 0 20px;
+   }
+}
+
+.channel-name {
+   font-family: Inter, sans-serif;
+   font-size: 20px;
+   font-weight: 700;
+   line-height: 25px;
+   text-align: center;
+   word-wrap: break-word;
+   white-space: normal;
+   width: 100%;
+   margin: 0;
+   max-width: 100%;
+   box-sizing: border-box;
+   cursor: pointer;
+
+}
+
+.channel-items {
+   display: flex;
+   margin-top: 29px;
+   flex-direction: column;
+   align-items: start;
+   font-size: 18px;
+   font-weight: 400;
+   line-height: 100%;
+   padding: 0 30px 0 13px;
+}
+
+@media (max-width: 991px) {
+   .channel-items {
+      padding-right: 20px;
+   }
+}
+
+/* Subchannel List */
+
+.sub-channels {
+   align-self: stretch;
+   display: flex;
+   gap: 1px;
+   font-weight: 700;
+}
+
+.sub-channel-options-dropdown {
+   width: 33px;
+   height: 33px;
+   /* Set a fixed height to match the width */
+   object-fit: contain;
+   /* Ensures the image maintains its aspect ratio */
+   display: block;
+   /* Ensures the image is displayed as a block element */
+   margin-top: 11px;
+}
+
+.sub-channels-collapse-dropdown {
+   aspect-ratio: 1;
+   width: 28px;
+}
+
+.sub-channels-text {
+   font-family: Inter, sans-serif;
+   flex-grow: 1;
+   margin: auto 0;
+   margin-right: 40px;
+}
+
+.sub-channel {
+   display: flex;
+   gap: 4px;
+   flex-wrap: wrap;
+   margin: 25px 0 0 14px;
+}
+
+@media (max-width: 991px) {
+   .sub-channel {
+      margin-left: 10px;
+      white-space: initial;
+   }
+}
+
+.other-channel-icon,
+.sub-channel-icon {
+   aspect-ratio: 1.06;
+   width: 18px;
+   height: auto;
+   max-height: 18px;
+}
+
+#modal-subchannel-name .sub-channel-icon {
+   aspect-ratio: 1.06;
+   width: 24px;
+   min-height: 24px;
+   margin-bottom: 2px;
+}
+
+.other-channel-name,
+.sub-channel-name {
+   font-family: Inter, sans-serif;
+   margin: auto 0;
+   margin-left: 3px;
+   cursor: pointer;
+   text-align: left;
+   overflow-wrap: break-word;
+   /* Ensures the text wraps within the container */
+   width: 100px;
+   /* Adjust width to account for the icon and gap */
+   flex-grow: 1;
+   /* Allow the name to take the remaining space */
+   white-space: normal;
+   /* Allows the text to wrap normally */
+   display: inline-block;
+   /* Ensure it respects the dynamic width */
+}
+
+
+.other-channels {
+   align-self: stretch;
+   display: flex;
+   margin-top: 28px;
+   gap: 0;
+   font-weight: 700;
+   line-height: 25px;
+}
+
+.other-channels-dropdown {
+   aspect-ratio: 1;
+   width: 28px;
+   align-self: start;
+}
+
+.other-channel {
+   display: flex;
+   gap: 4px;
+   margin: 25px 0 0 14px;
+}
+
+@media (max-width: 991px) {
+   .other-channel {
+      white-space: initial;
+   }
+}
+
+
+.other-channel-join {
+   aspect-ratio: 1.06;
+   width: 18px;
+   margin: auto 0;
+   margin-left: -5px;
+}
+
+/* Current Subchannel Items */
+
+.current-subchannel {
+   display: flex;
+   gap: 5px;
+   font-size: 20px;
+   white-space: nowrap;
+   line-height: 90%;
+}
+
+@media (max-width: 991px) {
+   .current-subchannel {
+      white-space: initial;
+   }
+}
+
+.current-subchannel-name {
+   font-family: Inter, sans-serif;
+   flex-grow: 1;
+   margin: auto 0;
+}
+
+.chat-title-icon {
+   aspect-ratio: 1;
+   width: 32px;
+}
+
+.chat-description {
+   text-align: left;
+   margin: auto 0;
+   font: 18px/18px Inter, sans-serif;
+}
+
+.chat-description-text {
+   text-align: left;
+   margin: auto 0;
+   font: 18px/18px Inter, sans-serif;
+}
+
+@media (max-width: 991px) {
+   .chat-description {
+      max-width: 100%;
+   }
+}
+
+
+
+
+/* Mesaj ve Mesaj Gönderme Alanı */
+
+.chat-container {
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+   height: 93vh;
+   /* Ensure the container takes the full height */
+}
+
+.chat-header {
+   border: 1px solid rgba(151, 151, 151, 1);
+   background-color: #fff;
+   gap: 20px;
+   color: #000;
+   font-weight: 700;
+   text-align: center;
+   display: flex;
+   padding: 24px 30px 34px 45px;
+   width: 101%;
+   height: 116px;
+   min-height: 116px;
+   border-left: none;
+}
+
+.chat-messages-container {
+   flex-grow: 1;
+   overflow-y: auto;
+   flex-direction: column;
+   justify-content: flex-end;
+   padding: 0 80px;
+   margin-top: 20px;
+   /* Adjust as needed */
+}
+
+.chat-messages {
+   display: flex;
+   flex-direction: column;
+   align-items: start;
+   justify-content: flex-end;
+   /* Ensure messages are aligned to the bottom */
+   min-height: 100%;
+   /* Ensure the container grows to fill the available space */
+}
+
+.message {
+   display: flex;
+   align-items: start;
+   gap: 9px;
+   margin-top: 35px;
+}
+
+
+.user-name {
+   color: #000;
+   font: 700 17px/90% Inter, sans-serif;
+   cursor: pointer;
+}
+
+.message-time {
+   color: #797676;
+   margin: 0px 0 0 -3px;
+   font: 600 16px/112.5% Inter, sans-serif;
+}
+
+.message-content {
+   color: #000;
+   margin: -19px 0 0 83px;
+   font: 300 16px/25px Helvetica, sans-serif;
+   word-wrap: break-word;
+   /* Ensure long words break correctly */
+   white-space: pre-wrap;
+   /* Respect new lines and white space */
+   max-width: 80%;
+   /* Limit the width of the message content area */
+   max-height: 80%;
+   background-color: #f1f1f1;
+   /* Add background color for better visual */
+   padding: 10px;
+   /* Add padding for better readability */
+   border-radius: 5px;
+   /* Add border-radius for a block-like appearance */
+}
+
+.message-content img {
+   max-width: 150px;
+   max-height: 150px;
+   text-align: center;
+   display: block;
+   /* Ensure the image is treated as a block element */
+   margin: 0 auto;
+   /* Center the image horizontally */
+}
+
+@media (min-width: 1600px) {
+
+   /* Media query for desktop screens */
+   .message-content img {
+      max-width: 300px;
+      max-height: 300px;
+   }
+}
+
+.message-input {
+   border: 1px solid rgba(0, 0, 0, 1);
+   background-color: #fff;
+   display: flex;
+   width: 90%;
+   max-width: 100%;
+   align-items: start;
+   gap: 20px;
+   font-size: 18px;
+   color: #000;
+   font-weight: 300;
+   text-align: center;
+   padding: 36px 0 3px 38px;
+   margin: 10px auto;
+   border-radius: 7px;
+}
+
+.message-input-text {
+   font-family: Inter, sans-serif;
+   flex-grow: 1;
+   text-align: left;
+}
+
+.message-input-icon {
+   aspect-ratio: 1;
+   margin-top: 40px;
+   max-width: 100%;
+   width: 28px;
+   height: auto;
+   margin-right: 4px;
+   cursor: pointer;
+}
+
+#message-input-area {
+   height: 75px;
+   width: 100%;
+   resize: none;
+   overflow-y: auto;
+   word-wrap: break-word;
+   padding: 10px;
+   box-sizing: border-box;
+   margin-bottom: 7px;
+   white-space: pre-wrap;
+   /* Ensure new lines are respected */
+}
+
+
+/* ---------------- */
+
+
+
+/* Styles for the modal and overlay */
+
+.overlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: rgba(0, 0, 0, 0.5);
+   display: none;
+   z-index: 999;
+}
+
+.modal {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   background: white;
+   padding: 40px;
+   border-radius: 8px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   z-index: 1000;
+   display: none;
+   width: 600px;
+   height: 500px;
+}
+
+#modal-description {
+   margin-top: 20px;
+   padding-top: 5px;
+}
+
+.close-btn {
+   position: absolute;
+   top: 20px;
+   right: 20px;
+   cursor: pointer;
+   font-size: 24px;
+}
+
+
+/* Kullanıcı Detayları Kutusu */
+
+.user-details-box {
+   display: none;
+   position: fixed;
+   top: 0;
+   right: 0;
+   width: 27%;
+   height: 95%;
+   padding: 20px;
+   margin-top: 61px;
+   background-color: white;
+   border-left: 1px solid #ccc;
+   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+   z-index: 1000;
+   overflow-y: auto;
+}
+
+.user-details-box .close-btn {
+   cursor: pointer;
+   float: right;
+   font-size: 30px;
+}
+
+.user-details-box img {
+   display: block;
+   margin: 0 auto 20px;
+   width: 100px;
+   height: 100px;
+   border-radius: 50%;
+}
+
+.user-details-text {
+
+   padding-top: 10px;
+   padding-bottom: 10px;
+}
+
+.custom-box {
+   border: 1px solid #B7D7FC;
+   border-radius: 8px;
+   padding: 16px;
+   margin: -9px;
+   margin-top: 25px;
+}
+
+.custom-box .edit-icon {
+   float: left;
+   cursor: pointer;
+}
+
+.custom-box .section {
+   border-bottom: 1px solid #B7D7FC;
+   padding-bottom: 8px;
+   margin-bottom: 8px;
+}
+
+.custom-box .section:last-child {
+   border-bottom: none;
+   margin-bottom: 0;
+   padding-bottom: 0;
+}
+
+/* Davet Modal */
+
+.section {
+   border-bottom: 1px solid #e0e0e0;
+   padding-bottom: 8px;
+   margin-bottom: 8px;
+}
+
+.section:last-child {
+   border-bottom: none;
+   margin-bottom: 0;
+   padding-bottom: 0;
+}
+
+.davet-header {
+   font-weight: bold;
+   font-size: 18px;
+   margin-top: 5px;
+   margin-bottom: 6px;
+}
+
+.davet-label {
+   margin-bottom: 10px;
+}
+
+.selected-users {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   padding: 6px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   min-height: 38px;
+}
+
+.selected-users .user-box {
+   display: inline-flex;
+   align-items: center;
+   background: #e9ecef;
+   border-radius: 15px;
+   padding: 5px 10px;
+   margin-right: 5px;
+   margin-bottom: 5px;
+}
+
+.selected-users .remove-user {
+   cursor: pointer;
+   margin-left: 5px;
+   font-size: 16px;
+}
+
+/* Davet Listesinde Seçilen Kullanıcı için Stiller */
+.channel-user-list,
+.channel-invitation-user-list,
+.subchannel-user-list,
+.subchannel-invitation-user-list {
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   padding: 10px;
+   max-height: 150px;
+   margin-top: 10px;
+   overflow-y: auto;
+}
+
+
+.owner-indicator {
+   font-size: 12px;
+   color: #777;
+   margin-right: 5px;
+}
+
+.channel-uye {
+   padding-right: 10px;
+}
+
+.user+.user {
+   border-top: 1px solid #ccc;
+}
+
+.user-avatar {
+   width: 40px;
+   height: 40px;
+   margin-right: 10px;
+   border-radius: 20%;
+   aspect-ratio: 1;
+   object-fit: cover;
+}
+
+.user-info {
+   display: flex;
+   flex-direction: column;
+}
+
+.user-email {
+   color: #777;
+}
+
+.form-group label {
+   margin-top: 10px;
+}
+
+.form-group {
+   margin-bottom: 20px;
+}
+
+#delete-subchannel {
+   margin-right: 10px;
+}
+
+
+
+.invitation-list {
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   padding: 10px;
+   max-height: 200px;
+   overflow-y: auto;
+}
+
+.invitation {
+   display: flex;
+   align-items: center;
+   padding: 10px 0;
+   border-bottom: 1px solid #ccc;
+}
+
+.invitation:last-child {
+   border-bottom: none;
+}
+
+.channel-icon {
+   width: 40px;
+   height: 40px;
+   margin-right: 10px;
+}
+
+.vertical-line {
+   height: 35px;
+   width: 1px;
+   background-color: #ccc;
+   margin: 0 5px;
+}
+
+.invitation-info {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   width: 100%;
+}
+
+.invitation-info .channel-name {
+   font-weight: 700;
+   font-size: 18px;
+}
+
+.invitation-actions {
+   display: flex;
+   gap: 5px;
+}
+
+.accept-btn,
+.decline-btn {
+   border: none;
+   background: none;
+   font-size: 20px;
+   cursor: pointer;
+}
+
+.accept-btn {
+   color: green;
+}
+
+.decline-btn {
+   color: red;
+}
+
+/* Channel Settings Modal */
+
+.channel-image {
+   width: 150px;
+   height: 150px;
+   object-fit: cover;
+   margin: 20px 0;
+}
+
+
+
+.btn-group .btn {
+   flex: 1;
+   border-radius: 0;
+}
+
+.btn-group .btn.active {
+   background-color: #007bff;
+   color: white;
+}
+
+.d-flex.justify-content-between {
+   margin-top: 20px;
+}
+
+.d-flex.justify-content-between .btn {
+   min-width: 100px;
+}
+
+.btn-group.channel-privacy-buttons .btn {
+   padding: 5px 10px;
+   font-size: 12px;
+}
+
+.channel-privacy-description {
+   font-size: 13px;
+}
+
+.channel-settings-buttons {
+   padding-top: 20px;
+}
+
+
+.mt-3 {
+   margin-top: 20px !important;
+}
+
+.mr-2 {
+   margin-right: 10px !important;
+}
+
+
+/* Profile Settings Menu */
+
+.user-profile-icon {
+   cursor: pointer;
+}
+
+.profile-menu {
+   position: absolute;
+   width: 200px;
+   border: 1px solid #B7D7FC;
+   background: #fff;
+   display: none;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+   z-index: 1000;
+}
+
+.profile-menu .profile-menu-header {
+   padding: 10px;
+   border-bottom: 1px solid #B7D7FC;
+   text-align: center;
+}
+
+.profile-menu .profile-menu-header img {
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+}
+
+.profile-menu .profile-menu-header .profile-name {
+   margin-top: 5px;
+   font-weight: bold;
+}
+
+.profile-menu ul {
+   list-style: none;
+   padding: 0;
+   margin: 0;
+}
+
+.profile-menu ul li {
+   padding: 10px;
+   border-bottom: 1px solid #B7D7FC;
+   cursor: pointer;
+}
+
+.profile-menu ul li:hover {
+   background: #f0f0f0;
+}
+
+.profile-menu ul li:last-child {
+   border-bottom: none;
+}
+
+.profile-menu ul li.logout {
+   color: red;
+   text-align: center;
+}
+
+
+
+/* Edit Profile Modal */
+
+#editProfileModal {
+   width: 680px;
+   height: 720px;
+
+}
+
+.modal .modal-body {
+   display: flex;
+}
+
+.modal .modal-body .form-section {
+   flex: 1;
+   padding: 20px;
+}
+
+.modal .modal-body .image-section {
+   flex: 1;
+   text-align: center;
+   padding: 20px;
+}
+
+.modal .modal-body .image-section img {
+   width: 150px;
+   height: 150px;
+   border-radius: 50%;
+}
+
+.modal .modal-footer {
+   text-align: right;
+   padding: 20px;
+}
+
+.small-modal {
+   width: 500px;
+   height: auto;
+}
+
+.small-modal .modal-body {
+   display: flex;
+   flex-direction: column;
+}
+
+.small-modal .modal-footer {
+   display: flex;
+   justify-content: space-between;
+}
+
+
+/* Theme Options Modal */
+
+.theme-options {
+   display: flex;
+   justify-content: space-around;
+   margin-top: 20px;
+}
+
+.theme-option {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 10px;
+   border: 2px solid transparent;
+   cursor: pointer;
+}
+
+.theme-option img {
+   width: 200px;
+   height: 150px;
+   margin-bottom: 10px;
+   margin-right: 10px;
+}
+
+.theme-option.active {
+   border: 2px solid #007bff;
+}
+
+.attachment p {
+   background-color: white;
+   border-radius: 6px;
+   padding: 4px 8px;
+   margin: 0;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+.attachment img {
+   width: 16px;
+}

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>MediConnect Dashboard</title>
+   <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+   <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+   <script src="/public/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
+   <script src="./node_modules/jquery/dist/jquery.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+   <script src="login.js"></script>
+   <script src="server.js"></script>
+   <script src="signup.js"></script>
+
+
+   <div class="container-fluid">
+      <div class="header">
+         <div class="header-content">
+            <input type="image" src="/public/invitation_button.png" alt="Invitation" class="invitation-button" />
+            <div class="search-bar">
+               <textarea class="form-control" id="search-input-area" placeholder="Ara"></textarea>
+               <input type="image" src="/public/search-icon.svg" class="search-button" id="search-button" />
+            </div>
+            <div class="user-icons">
+               <img src="/public/notification-icon.svg" alt="Notification Icon" class="notification-icon" />
+            </div>
+         </div>
+         <img src="/public/blank_user.png" alt="User Icon" class="user-profile-icon" id="main-user-avatar"
+            style="border-radius: 50%; object-fit: cover;" />
+      </div>
+      <!-- Sidebar -->
+      <div class="main-content">
+         <div class="sidebar" id="sidebar">
+            <div id="sidebar-content">
+               <!-- Kanal listesi -->
+            </div>
+          
+            <input type="image" src="/public/create_button.png" name="create_channel"
+               class="create-channel-modal-button" id="create-channel-modal-button" />
+         </div>
+         <div class="channel-list">
+            <div class="channel-header">
+               <p class="channel-name" id="channelName"></p>
+            </div>
+            <div class="channel-items">
+               <div class="sub-channels">
+                  <input type="image" src="/public/dropdown_menu_button.png" name="subchanneldropdown"
+                     class="sub-channels-collapse-dropdown" id="sub-channels-dropdown" data-bs-toggle="collapse"
+                     data-bs-target="#sub-channel-collapse" aria-expanded="true" aria-controls="sub-channel-collapse" />
+                  <div class="sub-channels-text">Alt Kanallar</div>
+               </div>
+
+               <div class="sub-channels-container" id="sub-channel-collapse">
+                  <!-- Katılınan Alt Kanalları Yükleme -->
+          
+               </div>
+               <div class="other-channels">
+                  <input type="image" src="/public/dropdown_menu_button.png" name="otherchanneldropdown"
+                     class="other-channels-dropdown" id="other-channel-dropdown" data-bs-toggle="collapse"
+                     data-bs-target="#other-channel-collapse" aria-expanded="true"
+                     aria-controls="other-channel-collapse" />
+                  <div class="other-channels-text">Diğer<br />Alt Kanallar</div>
+               </div>
+
+               <div class="other-channels-container" id="other-channel-collapse">
+                  <!-- Diğer Alt Kanallar -->
+                  
+               </div>
+            </div>
+         </div>
+
+         <!-- Mesajlaşma Kısmı -->
+         <div class="chat-container">
+            <div class="chat-header">
+               <div class="current-subchannel">
+                  <div class="current-subchannel-name"></div>
+                  <input type="image" src="/public/dropdown_menu_button.png" name="subchanneloptions"
+                     class="sub-channel-options-dropdown" id="sub-channel-options" />
+               </div>
+               <div class="chat-description-text"><b>Konu:</b></div>
+               <div class="chat-description"><span style="font-weight: 400"></span></div>
+            </div>
+
+            <div class="chat-messages-container">
+               <div class="chat-messages">
+
+                  <!-- Mesajlar Dinamik Olarak Gösterilir-->
+
+
+               </div>
+            </div>
+
+            <div class="message-input">
+               <textarea class="form-control" id="message-input-area" placeholder="Mesajınızı yazın..."></textarea>
+
+               <label>
+                  <input type="file" accept="image/*" id="image-attachment-input" style="display: none;" />
+                  <img src="/public/image_attachment.png" class="message-input-icon" alt="Image Attachment" />
+               </label>
+
+               <label>
+                  <input type="file" id="file-attachment-input" style="display: none;" />
+                  <img src="/public/attachment_button.png" class="message-input-icon" alt="file attachment" />
+               </label>
+
+               <input type="image" src="/public/send_button.png" name="send" class="message-input-icon"
+                  id="sendbutton" />
+            </div>
+         </div>
+
+      </div>
+   </div>
+
+   <!-- Menüler -->
+
+   <!-- Alt Kanal Alt Menüleri -->
+   <div class="overlay" id="sub-channel-overlay"></div>
+   <div class="modal" id="sub-channel-modal">
+      <span class="close-btn">&times;</span>
+      <h4 class="subchannel-name" id="modal-subchannel-name">
+         <img src="/public/channel_hash.png" class="sub-channel-icon" />
+         <strong id="modal-subchannel-name-text"></strong>
+      </h4>
+      <div class="container">
+         <ul class="nav nav-tabs" id="sub-channel-option-tabs" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active" id="subchannel-hakkinda-tab" data-toggle="tab" href="#subchannel-hakkinda"
+                  role="tab" aria-controls="subchannel-hakkinda" aria-selected="true">Hakkında</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" id="subchannel-uyeler-tab" data-toggle="tab" href="#subchannel-uyeler" role="tab"
+                  aria-controls="subchannel-uyeler" aria-selected="false">Üyeler</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" id="subchannel-ayarlar-tab" data-toggle="tab" href="#subchannel-ayarlar" role="tab"
+                  aria-controls="subchannel-ayarlar" aria-selected="false">Ayarlar</a>
+            </li>
+         </ul>
+         <div class="tab-content" id="sub-channel-tab-content">
+            <div class="tab-pane fade show active" id="subchannel-hakkinda" role="tabpanel"
+               aria-labelledby="subchannel-hakkinda-tab">
+               <div class="custom-box">
+                  <div class="subchannel-konu section">
+                     <h5>Topic <span class="edit-icon" id="subchannel-konu-edit-button">&#9998;</span></h5>
+                     <p id="subchannel-konu-text"></p>
+                     <textarea id="subchannel-konu-input" class="form-control" rows="3"
+                        style="display: none;"></textarea>
+                  </div>
+                  <div class="subchannel-creation section">
+                     <h5>Oluşturulma Tarihi</h5>
+                     <p id="subchannel-creation-time-text" style="font-style: italic;"></p>
+                  </div>
+               </div>
+               <button id="subchannel-konu-save-button" class="btn btn-primary mt-2"
+                  style="display: none;">Kaydet</button>
+            </div>
+            <div class="tab-pane fade" id="subchannel-uyeler" role="tabpanel" aria-labelledby="subchannel-uyeler-tab">
+               <!-- Üyeler Bölümü -->
+               <div class="search-bar" style="background: #ffffff;">
+                  <textarea class="form-control" id="subchannel-search-input-area" placeholder="Ara"></textarea>
+                  <input type="image" src="/public/search-icon.svg" class="search-button"
+                     id="subchannel-search-button" />
+               </div>
+               <div class="subchannel-user-list">
+                  <!-- Alt Kanal Üyeleri -->
+                 
+               </div>
+            </div>
+
+            <div class="tab-pane fade" id="subchannel-ayarlar" role="tabpanel" aria-labelledby="subchannel-ayarlar-tab">
+               <!-- Ayarlar Bölümü -->
+               <div class="form-group">
+                  <label for="subchannel-name"><strong>Alt Kanal İsmi</strong></label>
+                  <input type="text" class="form-control" id="subchannel-name">
+               </div>
+               <div class="form-group">
+                  <button class="btn btn-danger" id="delete-subchannel">Alt Kanalı Sil</button>
+                  <button class="btn btn-secondary" id="leave-subchannel">Alt Kanaldan Ayrıl</button>
+               </div>
+               <div class="d-flex justify-content-end mt-3" style="padding-top: 150px;">
+                  <button class="btn btn-secondary mr-2 subchannel-cancel-button">İptal</button>
+                  <button class="btn btn-primary" id="save-subchannel-name" style="margin-left: 10px;">Kaydet</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+
+   <!-- Channel Modal -->
+   <div class="overlay" id="channel-overlay"></div>
+   <div class="modal" id="channel-modal">
+      <span class="close-btn">&times;</span>
+      <h4 class="channel-name" id="modal-channel-name-text" style="padding-bottom: 12px;"><strong></strong></h4>
+      <div class="container">
+         <ul class="nav nav-tabs" id="channel-option-tabs" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active" id="channel-hakkinda-tab" data-toggle="tab" href="#channel-hakkinda"
+                  role="tab" aria-controls="channel-hakkinda" aria-selected="true">Hakkında</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" id="channel-uyeler-tab" data-toggle="tab" href="#channel-uyeler" role="tab"
+                  aria-controls="channel-uyeler" aria-selected="false">Üyeler</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" id="channel-davet-tab" data-toggle="tab" href="#channel-davet" role="tab"
+                  aria-controls="channel-davet" aria-selected="false">Davet</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" id="channel-subchannel-creation-tab" data-toggle="tab"
+                  href="#channel-subchannel-creation" role="tab" aria-controls="channel-subchannel-creation"
+                  aria-selected="false">Alt Kanal</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" id="channel-ayarlar-tab" data-toggle="tab" href="#channel-ayarlar" role="tab"
+                  aria-controls="channel-ayarlar" aria-selected="false">Ayarlar</a>
+            </li>
+         </ul>
+         <div class="tab-content" id="channel-tab-content">
+            <div class="tab-pane fade show active" id="channel-hakkinda" role="tabpanel"
+               aria-labelledby="channel-hakkinda-tab">
+               <div class="custom-box">
+                  <div class="channel-description section">
+                     <h5>Kanal Açıklaması <span class="edit-icon" id="channel-description-edit-button">&#9998;</span></h5>
+                     <p id="channel-description-text"></p>
+                     <textarea id="channel-description-input" class="form-control" rows="3"
+                        style="display: none;"></textarea>
+                  </div>
+                  <div class="channel-creation section">
+                     <h5>Oluşturulma Zamanı</h5>
+                     <p id="channel-creation-time-text" style="font-style: italic;"></p>
+                  </div>
+               </div>
+               <button id="channel-description-save-button" class="btn btn-primary mt-12"
+                  style="display: none;">Kaydet</button>
+            </div>
+            <div class="tab-pane fade" id="channel-uyeler" role="tabpanel" aria-labelledby="channel-uyeler-tab">
+               <!-- Üyeler Bölümü -->
+               <div class="search-bar" style="background: #ffffff;">
+                  <textarea class="form-control" id="channel-search-input-area" placeholder="Search"></textarea>
+                  <input type="image" src="/public/search-icon.svg" class="search-button" id="channel-search-button" />
+               </div>
+               <div class="channel-user-list">
+                  <!-- Kanal Üyeleri -->
+                 
+               </div>
+            </div>
+            <div class="tab-pane fade" id="channel-davet" role="tabpanel" aria-labelledby="channel-davet-tab">
+               <!-- Davet Bölümü -->
+               <div class="channel-davet-header">Kanala Yeni Kullanıcı Davet Et</div>
+               <div class="form-group" id="channel-davet-form">
+                  <label for="search-input" class="channel-davet-label">Davet Etmek İçin Kullanıcı Seçiniz</label>
+                  <div class="input-group">
+                     <div id="channel-selected-users" class="selected-users">
+                     </div>
+                     <input type="text" class="form-control" id="channel-search-input" placeholder="Ara">
+                  </div>
+               </div>
+               <div class="channel-invitation-user-list">
+                  <!-- Kullanıcı Listesini Yükleme -->
+                  <div class="user channel-davet-user" data-user-id="5">
+                     <img src="/public/blank_user.png" class="user-avatar" />
+                     <div class="user-info">
+                        <div class="user-name">Emircan Sonmez</div>
+                        <div class="user-email">emircan.sonmez@std.ankaramedipol.edu.tr</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="d-flex justify-content-end mt-3">
+                  <button class="btn btn-secondary mr-2 channel-cancel-button">İptal</button>
+                  <button class="btn btn-primary" id="save-channel-invite" style="margin-left: 10px;">Kaydet</button>
+               </div>
+            </div>
+            <div class="tab-pane fade" id="channel-subchannel-creation" role="tabpanel"
+               aria-labelledby="channel-subchannel-creation-tab">
+               <!-- Alt Kanal Oluşturma -->
+               <div class="container">
+                  <h5 style="padding-top: 15px;"><strong>Yeni Alt Kanal Oluştur</strong></h5>
+                  <p>Alt kanallar kullanıcıların iletişim kurduğu yerdir. Genellikle bir konu etrafında organize edilirler - örneğin #toplantı gibi.</p>
+                  <div class="form-group">
+                     <label for="subchannel-name"><strong>Alt Kanal İçin Bir İsim Giriniz</strong></label>
+                     <input type="text" class="form-control" id="subchannel-name-input" placeholder="#isim">
+                  </div>
+                  <div class="form-group">
+                     <label for="subchannel-topic"><strong>Alt Kanal İçin Konu Giriniz</strong></label>
+                     <input type="text" class="form-control" id="subchannel-topic-input"
+                        placeholder="What is this subchannel about?">
+                  </div>
+                  <div class="d-flex justify-content-end mt-3">
+                     <button class="btn btn-secondary mr-2" id="cancel-subchannel-creation-button">İptal</button>
+                     <button class="btn btn-primary" id="create-subchannel-button">Kaydet</button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="tab-pane fade" id="channel-ayarlar" role="tabpanel" aria-labelledby="channel-ayarlar-tab">
+               <!-- Kanal Ayarları Bölümü -->
+               <div class="container">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form-group">
+                           <label for="channel-name"><strong>Kanal İsmi</strong></label>
+                           <input type="text" class="form-control" id="channel-name-editor" placeholder="Channel Name">
+                        </div>
+                        <div class="form-group">
+                           <label for="channel-privacy"><strong>Kanal Gizliliği</strong></label>
+                           <p class="channel-privacy-description">Herkese açık seçeneğinde bütün kullanıcılar kanalınıza katılabilir. 
+                              Davet seçeneğini seçerseniz sadece davet edilen kullanıcılar kanalınıza katılabilir.</p>
+                           <div class="btn-group d-flex channel-privacy-buttons" role="group">
+                              <button type="button" class="btn btn-outline-secondary active"
+                                 id="channel-public-setting-button">Herkese Açık &#10004;</button>
+                              <button type="button" class="btn btn-outline-secondary"
+                                 id="channel-inviteonly-setting-button">Davet</button>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-md-6 text-center">
+                        <label><strong>Kanal Resmi</strong></label>
+                        <label>
+                           <input type="file" accept="image/*" id="channel-image-input" style="display: none;" />
+                           <img src="/public/channel1.png" class="channel-image" alt="Channel Image" />
+                        </label>
+                        <div class="mt-3">
+                           <button class="btn btn-primary" id="upload-channel-image-button">Resim Yükle</button>
+                           <button class="btn btn-secondary" id="delete-channel-image-button">Resmi Sil</button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="d-flex justify-content-between mt-3 channel-settings-buttons">
+                     <button class="btn btn-danger" id="delete-channel">Kanalı Sil</button>
+                     <button class="btn btn-secondary" id="leave-channel">Kanaldan Ayrıl</button>
+                     <div>
+                        <button class="btn btn-secondary mr-2" id="cancel-channel-settings">İptal</button>
+                        <button class="btn btn-primary" id="save-channel-settings">Kaydet</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+   </div>
+
+   <!-- Kanal Oluşturma Menüsü -->
+   <div class="overlay" id="create-channel-overlay"></div>
+   <div class="modal" id="create-channel-modal">
+      <span class="close-btn">&times;</span>
+      <h4><strong>Yeni Kanal Oluştur / Katıl</strong></h4>
+      <div class="container">
+         <p id="modal-description">Kanallar, kullanıcıların iletişim kurabileceği ve birlikte çalışabileceği alt kanallardan oluşur. 
+            Hali hazırda ismi alınmamış bir kanal oluşturabilirsiniz.</p>
+         <div class="btn-group d-flex justify-content-center mb-3" role="group">
+            <button type="button" class="btn btn-outline-secondary active" id="create-tab">Oluştur</button>
+            <button type="button" class="btn btn-outline-secondary" id="join-tab">Katıl</button>
+         </div>
+         <div id="create-content">
+            <div class="form-group">
+               <label for="channel-name"><strong>Kanal İçin İsim Giriniz</strong></label>
+               <input type="text" class="form-control" id="create-channel-name" placeholder="Channel Name">
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+               <button class="btn btn-primary" id="create-channel-button">Oluştur</button>
+            </div>
+         </div>
+         <div id="join-content" style="display: none;">
+            <div class="form-group">
+               <label for="channel-list"><strong>Kanal Listesi</strong></label>
+               <select class="form-control" id="channel-list">
+                  <!-- Kanal Listesi Backend Javascript Kodu ile Dinamik Olarak Gelecektir -->
+               </select>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+               <button class="btn btn-primary" id="join-channel-button">Katıl</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <!-- Davet Kabul/Red Menüsü -->
+   <div class="overlay" id="invitation-overlay"></div>
+   <div class="modal" id="invitation-modal">
+      <span class="close-btn">&times;</span>
+      <h4><strong>Kanal Davetleri</strong></h4>
+      <div class="container">
+         <p><i class="fas fa-info-circle"></i> Kanal Davetlerinizi Kabul ya da Red Edebilirsiniz</p>
+         <div class="invitation-list">
+            <!-- Davet Listesi -->
+
+            
+         </div>
+      </div>
+   </div>
+
+
+   <!-- Kullanıcı Detayları Menüsü -->
+   <div class="user-details-box">
+      <span class="close-btn">&times;</span>
+      <img id="user-avatar" src="/public/blank_user.png" alt="User Profile Image"
+         style="border-radius: 50%; object-fit: cover;" / />
+      <div class="user-details-content">
+         <div style="padding-top: 30px;"><strong>İsim Soyisim</strong> </div>
+         <div class="user-details-text" id="user-name"></div>
+         <div><strong>Email</strong> </div>
+         <div class="user-details-text" id="user-email"></div>
+         <div><strong>Fakülte</strong></div>
+         <div class="user-details-text" id="user-faculty"></div>
+      </div>
+   </div>
+
+   <!-- Profil Ayarları Menüsü -->
+   <div class="profile-menu" id="profileMenu">
+      <div class="profile-menu-header">
+         <img src="/public/blank_user.png" alt="Profile Image" id="profile-user-avatar"
+            style="border-radius: 50%; object-fit: cover;" />
+         <div class="user-name" id="profile-name" data-user-id=""></div>
+      </div>
+      <ul>
+         <li class="view-profile" data-user-id="">Profili Görüntüle</li>
+         <li class="edit-profile">Profili Düzenle</li>
+         <li class="theme-settings">Tema Ayarları</li>
+         <li class="change-password">Şifreyi Değiştir</li>
+         <li class="logout" data-action="logout">Çıkış Yap</li>
+      </ul>
+   </div>
+
+   <!-- Profili Düzenle Menüsü -->
+   <div class="overlay" id="editProfileOverlay"></div>
+   <div class="modal" id="editProfileModal">
+      <div class="edit-profile-content">
+         <div class="close-btn" id="closeEditProfileModal">&times;</div>
+         <div class="modal-body">
+            <div class="form-section">
+               <h5><strong>Profilini Düzenle</strong></h5>
+               <div class="form-group">
+                  <label for="fullName">İsim Soyisim</label>
+                  <input type="text" class="form-control" id="fullName">
+               </div>
+               <div class="form-group">
+                  <label for="faculty">Fakülte</label>
+                  <input type="text" class="form-control" id="faculty"
+                     value="İktisadi, İdari ve Sosyal Bilimler Fakltesi" readonly>
+               </div>
+               <div class="form-group">
+                  <label for="department">Bölüm</label>
+                  <input type="text" class="form-control" id="department" readonly>
+               </div>
+               <div class="form-group">
+                  <label for="year">Sınıf</label>
+                  <select class="form-control" id="year">
+                     <option value="Hazırlık">Hazırlık</option>
+                     <option value="1. Sınıf">1. Sınıf</option>
+                     <option value="2. Sınıf">2. Sınıf</option>
+                     <option value="3. Sınıf">3. Sınıf</option>
+                     <option value="4. Sınıf">4. Sınıf</option>
+                     <option value="5. Sınıf">5. Sınıf</option>
+                     <option value="6. Sınıf">6. Sınıf</option>
+                     <option value="Lisansüstü 1. Sınıf">Lisansüstü 1. Sınıf</option>
+                     <option value="Lisansüstü 2. Sınıf">Lisansüstü 2. Sınıf</option>
+                  </select>
+               </div>
+               <div class="form-group">
+                  <label for="bio">Biyografi</label>
+                  <textarea class="form-control" id="bio"></textarea>
+               </div>
+            </div>
+            <div class="image-section">
+               <h5><strong>Profil Resmi</strong></h5>
+               <label>
+                  <input type="file" accept="image/*" id="profile-image-input" style="display: none;" />
+                  <img src="/public/blank_user.png" id="user-profile-image" alt="Profile Image"
+                     style="object-fit: cover; cursor: pointer;">
+               </label>
+               <button class="btn btn-primary mt-3 upload-profile-image" id="upload-profile-image">Resim Yükle</button>
+               <button class="btn btn-secondary mt-3" id="delete-profile-image">Resmi Sil</button>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelEditProfile">İptal</button>
+            <button class="btn btn-primary" id="saveEditProfile">Kaydet</button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Şifre Değiştirme Menüsü -->
+   <div class="overlay" id="changePasswordOverlay"></div>
+   <div class="modal small-modal" id="changePasswordModal">
+      <div class="close-btn" id="closeChangePasswordModal">&times;</div>
+      <div class="modal-body">
+         <h5><strong>Şifreyi Değiştir</strong></h5>
+         <div class="form-group">
+            <label for="newPassword">Yeni Şifre</label>
+            <input type="password" class="form-control" id="newPassword">
+         </div>
+         <div class="form-group">
+            <label for="confirmPassword">Yeni Şifreyi Doğrula</label>
+            <input type="password" class="form-control" id="confirmPassword">
+         </div>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-secondary" id="cancelChangePassword">İptal</button>
+         <button class="btn btn-primary" id="saveChangePassword">Kaydet</button>
+      </div>
+   </div>
+
+   <!-- Tema Ayarları Menüsü -->
+   <div class="overlay" id="themeSettingsOverlay"></div>
+   <div class="modal small-modal" id="themeSettingsModal" style="width: 700px;">
+      <div class="close-btn" id="closeThemeSettingsModal">&times;</div>
+      <div class="modal-body">
+         <h5><strong>Tema Ayarları</strong></h5>
+         <p>MediConnect’te Kullanmak İstediğiniz Temayı Seçiniz</p>
+         <div class="theme-options">
+            <div class="theme-option" id="lightTheme">
+               <img src="/public/light_theme.png" alt="Light Theme">
+               <p>Açık</p>
+            </div>
+            <div class="theme-option" id="darkTheme">
+               <img src="/public/dark_theme.png" alt="Dark Theme">
+               <p>Karanlık</p>
+            </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-secondary" id="cancelThemeSettings">İptal</button>
+         <button class="btn btn-primary" id="saveThemeSettings">Kaydet</button>
+      </div>
+   </div>
+
+   <script>
+
+   </script>
+
+   <script src="/dashboard.js"></script>
+   <script src="/server.js"></script>
+
+</body>
