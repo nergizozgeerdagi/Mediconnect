@@ -10,39 +10,44 @@ const { sequelize } = require("./models");
 const cors = require("cors");
 const helmet = require("helmet");
 
-// CORS middleware
-app.use(cors({
-   origin: "*",
-   methods: "GET, POST, OPTIONS, PUT, PATCH, DELETE",
-   allowedHeaders: "X-Requested-With,content-type",
-   credentials: true
-}));
+app.use(
+   cors({
+      origin: (origin, callback) => callback(null, true),
+      credentials: true,
+      origin: "*",
+   })
+);
+app.use(function (req, res, next) {
+   // res.header("Access-Control-Allow-Origin", "*");
+   // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   // res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+   // next();
+   res.setHeader("Access-Control-Allow-Origin", "*");
+   
+   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+   
+   res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+   
+   res.setHeader("Access-Control-Allow-Credentials", true);
+   
+   next();
+});
 
-// preflight 
-app.options('*', cors());
-
-// Helmet
 app.use(helmet());
 
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Statik hale getirme
 app.use("/public", express.static(__dirname + "/public"));
 
-// Routes & controllers
-app.get("/api", (req, res) => res.json({ msg: "Api" }));
+app.get("/api", (req, res) => res.json({ msg: " MC Backend API" }));
 app.use("/api", require("./src/routes/user-route"));
-
-// 404 error
 app.use(function (req, res, next) {
    const { errorResponse } = require("./src/utils/constants");
    res.status(404).json(errorResponse("API NOT FOUND", res.statusCode));
 });
-
 
 let port = 3002;
 
@@ -52,5 +57,4 @@ app.listen(port, async () => {
 
    console.log(`Server Started on port ${port}`);
 });
-
 module.exports = { app };

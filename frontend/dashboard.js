@@ -81,6 +81,7 @@ $(document).ready(function () {
       e.preventDefault();
 
       const user = JSON.parse(localStorage.getItem("user"));
+      console.log(user);
       $("#fullName").val(user.name);
       $("#faculty").val(user.faculty);
       $("#department").val(user.department);
@@ -227,24 +228,23 @@ $(document).ready(function () {
       "Tıp Fakültesi": ["Hazırlık Sınıfı", "1. Sınıf", "2. Sınıf", "3. Sınıf", "4. Sınıf", "5. Sınıf", "6. Sınıf"],
    };
 
-   window.onload = function () {
-      var facultyInput = document.getElementById("faculty");
-      var yearSelect = document.getElementById("year");
+   // var facultyInput = document.getElementById("faculty");
+   var yearSelect = document.getElementById("year");
 
-      function populateYears(faculty) {
-         var years = yearsByFaculty[faculty] || [];
-         yearSelect.innerHTML = "";
-         years.forEach(function (year) {
-            var option = document.createElement("option");
-            option.value = year;
-            option.textContent = year;
-            yearSelect.appendChild(option);
-         });
-      }
+   function populateYears(faculty) {
+      var years = yearsByFaculty[faculty] || [];
+      yearSelect.innerHTML = "";
+      years.forEach(function (year) {
+         var option = document.createElement("option");
+         option.value = year;
+         option.textContent = year;
+         yearSelect.appendChild(option);
+      });
+   }
 
-      // Populate the years based on the default faculty value
-      populateYears(facultyInput.value);
-   };
+   // Populate the years based on the default faculty value
+   const currentUser = JSON.parse(localStorage.getItem("user"));
+   populateYears(currentUser.faculty);
 });
 
 // Sub-Channel Module
@@ -260,7 +260,7 @@ $(function () {
       $("#subchannel-creation-time-text").text(formatDate(subChannel.createdAt));
       $("#subchannel-name").val(subChannel.name);
       $("#subchannel-search-input-area").val("");
-      if (subChannel.name === "General") {
+      if (subChannel.name === "Genel") {
          $("#subchannel-name").prop("readonly", true).addClass("readonly");
       } else {
          $("#subchannel-name").prop("readonly", false).removeClass("readonly");
@@ -273,6 +273,8 @@ $(function () {
          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
          success: function (response) {
             $(".subchannel-user-list").empty();
+
+            console.log(response);
 
             response.forEach(function (member) {
                const user = document.createElement("div");
@@ -372,7 +374,7 @@ $(function () {
       const updatedName = $("#subchannel-name").val();
 
       if (updatedName === "") {
-         alert("Ltfen bir isim girin!");
+         alert("Lütfen bir isim girin!");
          return;
       }
 
@@ -506,6 +508,8 @@ $(function () {
          success: function (response) {
             // location.reload();
 
+            console.log(response);
+
             openSubChannel(subChannelId);
 
             // Remove the subChannel from the other subChannels list
@@ -515,10 +519,12 @@ $(function () {
                }
             });
 
+            const subChannelToAdd = response.find((subChannel) => subChannel._id === subChannelId);
+
             // Add the subChannel to joined subChannels list
             var subChannelDiv = document.createElement("div");
             subChannelDiv.classList.add("sub-channel");
-            subChannelDiv.setAttribute("data-sub-channel-id", response._id);
+            subChannelDiv.setAttribute("data-sub-channel-id", subChannelToAdd._id);
 
             var subChannelImg = document.createElement("img");
             subChannelImg.classList.add("sub-channel-icon");
@@ -526,7 +532,7 @@ $(function () {
 
             var subChannelName = document.createElement("div");
             subChannelName.classList.add("sub-channel-name");
-            subChannelName.textContent = response.name;
+            subChannelName.textContent = subChannelToAdd.name;
 
             subChannelDiv.appendChild(subChannelImg);
             subChannelDiv.appendChild(subChannelName);
@@ -572,7 +578,7 @@ $(function () {
             userList.forEach(function (user) {
                const outerDiv = document.createElement("div");
                outerDiv.classList.add("user", "channel-davet-user");
-               outerDiv.setAttribute("data-user-id", user._id);
+               outerDiv.setAttribute("data-user-id", user.id);
 
                const userImg = document.createElement("img");
                userImg.classList.add("user-avatar");
@@ -764,7 +770,7 @@ $(function () {
       const subchannelTopic = $("#subchannel-topic-input").val();
 
       if (!subchannelName || !subchannelTopic) {
-         alert("Sub-channel name or topic cannot be empty!");
+         alert("Alt Kanal İsmi ya da Konu Boş Bırakılamaz!");
          return;
       }
 
@@ -895,7 +901,7 @@ $(function () {
          // const isPublic = $("#channel-public-setting-button").hasClass("active");
 
          if (channelName === "") {
-            alert("Channel name cannot be empty!");
+            alert("Kanal İsmi Boş Olamaz!");
             return;
          }
 
@@ -971,7 +977,7 @@ $(function () {
                },
             });
          } else {
-            alert("Please select an image first.");
+            alert("Lütfen Önce Bir Resim Seçin");
          }
       });
       // Delete image
@@ -1023,7 +1029,7 @@ $(function () {
                .attr("value", "")
                .attr("disabled", "true")
                .attr("selected", "true")
-               .text("Select a Channel");
+               .text("Kanal Seçiniz");
             $("#channel-list").append(defaultOption);
 
             const channelList = response;
@@ -1073,7 +1079,7 @@ $(function () {
       const channelName = $("#create-channel-name").val();
 
       if (channelName === "") {
-         alert("Ltfen kanal için bir isim girin!");
+         alert("Lütfen kanal için bir isim girin!");
          return; // If empty, prevent further code execution
       }
 
@@ -1150,6 +1156,7 @@ function fetchAllInvitations() {
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       success: function (response) {
          // Populate the invite list with the response data
+
          $(".invitation-list").empty();
          const inviteList = response;
          inviteList.forEach(function (invite) {
@@ -1158,7 +1165,7 @@ function fetchAllInvitations() {
 
             const inviteImg = document.createElement("img");
             inviteImg.classList.add("channel-icon");
-            inviteImg.setAttribute("src", invite.channel.image || "/public/blank_channel.png");
+            inviteImg.setAttribute("src", invite.Channel.image || "/public/blank_channel.png");
             outerDiv.appendChild(inviteImg);
 
             const invitationInfo = document.createElement("div");
@@ -1167,7 +1174,7 @@ function fetchAllInvitations() {
 
             const inviteName = document.createElement("div");
             inviteName.classList.add("channel-name");
-            inviteName.innerText = invite.channel.name;
+            inviteName.innerText = invite.Channel.name;
             invitationInfo.appendChild(inviteName);
 
             const invitationActions = document.createElement("div");
@@ -1175,7 +1182,7 @@ function fetchAllInvitations() {
             invitationInfo.appendChild(invitationActions);
 
             const acceptBtn = document.createElement("button");
-            acceptBtn.setAttribute("data-invite-id", invite._id);
+            acceptBtn.setAttribute("data-invite-id", invite.id);
             acceptBtn.classList.add("btn", "btn-success", "accept-btn");
             acceptBtn.innerHTML = "&#10004;";
             invitationActions.appendChild(acceptBtn);
@@ -1185,7 +1192,7 @@ function fetchAllInvitations() {
             invitationActions.appendChild(verticalLine);
 
             const declineBtn = document.createElement("button");
-            declineBtn.setAttribute("data-invite-id", invite._id);
+            declineBtn.setAttribute("data-invite-id", invite.id);
             declineBtn.classList.add("btn", "btn-danger", "decline-btn");
             declineBtn.innerHTML = "&#10008;";
             invitationActions.appendChild(declineBtn);
@@ -1412,6 +1419,7 @@ $("#image-attachment-input").on("change", function (event) {
 
    const currentChannel = JSON.parse(localStorage.getItem("channel"));
    const currentSubChannel = JSON.parse(localStorage.getItem("subchannel"));
+
    if (!currentChannel._id || !currentSubChannel._id) return;
 
    if (input.files && input.files[0]) {
@@ -1427,13 +1435,13 @@ $("#image-attachment-input").on("change", function (event) {
          contentType: false,
          success: function (response) {
             addNewMessage({
-               _id: response._id,
+               _id: response.id,
                image: response.image,
-               userName: response.user.name,
-               userAvatar: response.user.image || "/public/blank_user.png",
+               userName: response.userDetails.name,
+               userAvatar: response.userDetails.image || "/public/blank_user.png",
                messageTime: formatDateTime(response.timestamp),
-               userEmail: response.user.email,
-               userFaculty: response.user.faculty,
+               userEmail: response.userDetails.email,
+               userFaculty: response.userDetails.faculty,
             });
 
             $("#image-attachment-input").val("");
@@ -1466,13 +1474,13 @@ $("#file-attachment-input").on("change", function (event) {
          contentType: false,
          success: function (response) {
             addNewMessage({
-               _id: response._id,
+               _id: response.id,
                attachment: response.attachment,
-               userName: response.user.name,
-               userAvatar: response.user.image || "/public/blank_user.png",
+               userName: response.userDetails.name,
+               userAvatar: response.userDetails.image || "/public/blank_user.png",
                messageTime: formatDateTime(response.timestamp),
-               userEmail: response.user.email,
-               userFaculty: response.user.faculty,
+               userEmail: response.userDetails.email,
+               userFaculty: response.userDetails.faculty,
             });
 
             $("#file-attachment-input").val("");
@@ -1506,13 +1514,13 @@ function sendMessage() {
       }),
       success: function (response) {
          addNewMessage({
-            _id: response._id,
+            _id: response.id,
             message: response.message,
-            userName: response.user.name,
-            userAvatar: response.user.image || "/public/blank_user.png",
+            userName: response.userDetails.name,
+            userAvatar: response.userDetails.image || "/public/blank_user.png",
             messageTime: formatDateTime(response.timestamp),
-            userEmail: response.user.email,
-            userFaculty: response.user.faculty,
+            userEmail: response.userDetails.email,
+            userFaculty: response.userDetails.faculty,
          });
 
          $("#message-input-area").val("");
@@ -1694,17 +1702,18 @@ function fetchAllMessages(subChannelId) {
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       success: function (response) {
          // Add the messages to the chat
+
          response.forEach(function (message) {
             addNewMessage({
-               _id: message._id,
+               _id: message.id,
                message: message.message,
                attachment: message.attachment,
                image: message.image,
-               userName: message.user.name,
-               userAvatar: message.user.image || "/public/blank_user.png",
+               userName: message.userDetails.name,
+               userAvatar: message.userDetails.image || "/public/blank_user.png",
                messageTime: formatDateTime(message.timestamp),
-               userEmail: message.user.email,
-               userFaculty: message.user.faculty,
+               userEmail: message.userDetails.email,
+               userFaculty: message.userDetails.faculty,
             });
          });
       },
@@ -1745,7 +1754,7 @@ $(document).ready(function () {
       }
 
       if (newPassword !== confirmPassword) {
-         alert("Passwords do not match!");
+         alert("Şifreler Eşleşmiyor!");
          return;
       }
 
@@ -1756,7 +1765,7 @@ $(document).ready(function () {
          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
          data: JSON.stringify({ newPassword }),
          success: function () {
-            alert("Password changed successfully!");
+            alert("Şifre Başarıyla Değiştirildi!");
             $("#newPassword").val("");
             $("#confirmPassword").val("");
             $("#changePasswordOverlay").fadeOut();
@@ -1782,7 +1791,7 @@ $(document).ready(function () {
          data: JSON.stringify({ name, year, biography }),
          success: function (response) {
             localStorage.setItem("user", JSON.stringify(response));
-            alert("Profile updated successfully!");
+            alert("Profil Başarıyla Güncellendi!");
 
             $("#editProfileOverlay").fadeOut();
             $("#editProfileModal").fadeOut();
@@ -1820,14 +1829,14 @@ $(document).ready(function () {
             contentType: false,
             success: function (response) {
                localStorage.setItem("user", JSON.stringify(response));
-               alert("Image uploaded successfully!");
+               alert("Resim Başarıyla Yüklendi!");
             },
             error: function (jqXHR) {
                alert(jqXHR.responseJSON.error);
             },
          });
       } else {
-         alert("Please select an image first.");
+         alert("Lüften Önce Resim Seçin");
       }
    });
    // Delete image
@@ -1839,7 +1848,7 @@ $(document).ready(function () {
          success: function (response) {
             localStorage.setItem("user", JSON.stringify(response));
             $("#user-profile-image").attr("src", "/public/blank_user.png");
-            alert("Image deleted successfully!");
+            alert("Resim Başarıyla Silindi!");
          },
          error: function (jqXHR) {
             alert(jqXHR.responseJSON.error);
@@ -1917,7 +1926,7 @@ function openChannel(channelId) {
          });
 
          // Open the "General" subchannel by default
-         const subChannelToOpen = response.subChannels.find((subChannel) => subChannel.name === "General");
+         const subChannelToOpen = response.subChannels.find((subChannel) => subChannel.name === "Genel");
          openSubChannel(subChannelToOpen._id);
       },
       error: function (jqXHR) {
@@ -1940,6 +1949,8 @@ function openSubChannel(subChannelId) {
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       success: function (response) {
          localStorage.setItem("subchannel", JSON.stringify(response));
+
+         console.log(response);
 
          $(".current-subchannel-name").text(response.name);
          $(".chat-description span").text(response.topic);

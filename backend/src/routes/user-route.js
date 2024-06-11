@@ -38,13 +38,13 @@ router.post("/signup", async (req, res) => {
    try {
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
-         return res.status(400).json({ error: "Email already in use" });
+         return res.status(400).json({ error: "Bu Email Adresi Daha Önce Kullanılmış!" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({ name, email, password: hashedPassword, department, faculty, year });
 
-      res.status(201).json({ message: "User created successfully" });
+      res.status(201).json({ message: "Kullanıcı Başarıyla Yaratıldı" });
    } catch (err) {
       res.status(400).json({ error: err.message });
    }
@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
    try {
       const user = await User.findOne({ where: { email } });
       if (!user) {
-         return res.status(401).json({ error: "Invalid email or password" });
+         return res.status(401).json({ error: "Hatalı Email ya da Şifre" });
       }
 
       let obj = {
@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
       // Parolayı veritabanındaki hashlı parolayla karşılaştırma
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-         return res.status(401).json({ error: "Wrong Passwotd" });
+         return res.status(401).json({ error: "Yanlış Şifre" });
       }
       const token = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET);
       res.json({ token, user: obj });
@@ -95,14 +95,14 @@ router.patch("/password", auth, async (req, res) => {
    try {
       const user = await User.findByPk(req.user.id);
       if (!user) {
-         return res.status(404).json({ error: "User not found" });
+         return res.status(404).json({ error: "Kullanıcı Bulunamadı" });
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       user.password = hashedPassword;
       await user.save();
 
-      res.json({ message: "Password changed successfully" });
+      res.json({ message: "Şifre Başarıyla Değiştirildi" });
    } catch (err) {
       res.status(400).json({ error: err.message });
    }
@@ -116,7 +116,7 @@ router.get("/profile", auth, async (req, res) => {
       });
 
       if (!user) {
-         return res.status(404).json({ error: "User not found" });
+         return res.status(404).json({ error: "Kullanıcı Bulunamadı" });
       }
 
       res.json(user);
@@ -127,7 +127,7 @@ router.get("/profile", auth, async (req, res) => {
 
 router.patch("/profile/image", auth, upload.single("image"), async (req, res) => {
    if (!req.file) {
-      return res.status(400).json({ error: "No image file uploaded" });
+      return res.status(400).json({ error: "Hiçbir Resim Yüklenmedi" });
    }
 
    const serverPath = process.env.IMAGE_PATH_ORIGIN;
@@ -151,7 +151,7 @@ router.delete("/profile/image", auth, async (req, res) => {
       const user = await User.findByPk(req.user.id);
 
       if (!user) {
-         return res.status(404).json({ error: "User not found" });
+         return res.status(404).json({ error: "Kullanıcı Bulunamadı" });
       }
 
       // Kullanıcının resim URL'ini sıfırlama
@@ -168,7 +168,7 @@ router.patch("/channel/:channelId/image", auth, upload.single("image"), async (r
    const { channelId } = req.params;
 
    if (!req.file) {
-      return res.status(400).json({ error: "No image file uploaded" });
+      return res.status(400).json({ error: "Resim Dosyası Yükelenmedi" });
    }
 
    const serverPath = process.env.IMAGE_PATH_ORIGIN;
@@ -181,13 +181,13 @@ router.patch("/channel/:channelId/image", auth, upload.single("image"), async (r
       if (!channel) {
          // Kanal bulunamazsa yüklenen resmi silme
          fs.unlinkSync(req.file.path);
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy !== req.user.id) {
          // Kullanıcı Kanal sahibi değilse yüklenen resmi silme
          fs.unlinkSync(req.file.path);
-         return res.status(400).json({ error: "Only the channel owner can change the channel image" });
+         return res.status(400).json({ error: "Sadece Kanal Sahibi Resim Yükleyebilir!" });
       }
 
       // Kanal resmi URL güncellenmesi
@@ -209,11 +209,11 @@ router.delete("/channel/:channelId/image", auth, async (req, res) => {
       const channel = await Channel.findByPk(channelId);
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy !== req.user.id) {
-         return res.status(400).json({ error: "Only the channel owner can change the channel image" });
+         return res.status(400).json({ error: "Sadece Kanal Sahibi Resim Yükleyebilir!" });
       }
 
       // Kanal resmi URL'inin sıfırlanması
@@ -236,7 +236,7 @@ router.patch("/profile/details", auth, async (req, res) => {
       const user = await User.findByPk(req.user.id);
 
       if (!user) {
-         return res.status(404).json({ error: "User not found" });
+         return res.status(404).json({ error: "Kullanıcı Bulunamadı" });
       }
 
       // Kullanıcı bilgilerini güncelleme
@@ -258,12 +258,12 @@ router.patch("/join-channel", auth, async (req, res) => {
       const channel = await Channel.findByPk(id);
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       const isChannelOwner = channel.createdBy === req.user.id;
       if (isChannelOwner) {
-         return res.status(400).json({ error: "You cannot join a channel you created" });
+         return res.status(400).json({ error: "Oluşturduğunuz Bir Kanala Katılamazsınız" });
       }
 
       const isMember = await ChannelMember.findOne({
@@ -273,7 +273,7 @@ router.patch("/join-channel", auth, async (req, res) => {
          },
       });
       if (isMember) {
-         return res.status(400).json({ error: "User is already a member of this channel" });
+         return res.status(400).json({ error: "Kullancıcı Bu Kanalın Bir Üyesi" });
       }
 
       // Kanala üye ekleme
@@ -490,8 +490,8 @@ router.post("/channel", auth, async (req, res) => {
 
       // Genel alt kanalının oluşturulması
       const generalSubChannel = await SubChannel.create({
-         name: "General",
-         topic: "General subchannel",
+         name: "Genel",
+         topic: "Genel Alt Kanalı Konusu",
          channelId: newChannel.id,
       });
 
@@ -556,11 +556,11 @@ router.patch("/channel-name/:id", auth, async (req, res) => {
       const channel = await Channel.findByPk(channelId);
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy !== req.user.id) {
-         return res.status(400).json({ error: "Only the channel owner can update the channel name" });
+         return res.status(400).json({ error: "Sadece Kanal Sahibi Kanalın İsmini Değiştirebilir!" });
       }
 
       // Kanal isminin güncellenmesi
@@ -582,7 +582,7 @@ router.patch("/channel-description/:id", auth, async (req, res) => {
       const channel = await Channel.findByPk(channelId);
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       // Kanal açıklamasının güncellenmesi
@@ -604,11 +604,11 @@ router.delete("/channel/:id", auth, async (req, res) => {
       const channel = await Channel.findByPk(channelId);
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy !== req.user.id) {
-         return res.status(400).json({ error: "Only the channel owner can delete the channel" });
+         return res.status(400).json({ error: "Sadece Kanal Sahibi Kanalı Silebilir!" });
       }
 
       // Kullanıcının üyesi veya sahibi olduğu tek kanalın bu olup olmadığını kontrol etme
@@ -625,13 +625,13 @@ router.delete("/channel/:id", auth, async (req, res) => {
       });
 
       if (userChannelsCount + memberChannelsCount === 1) {
-         return res.status(400).json({ error: "You cannot delete the last channel" });
+         return res.status(400).json({ error: "Son Kanalı Silemezsiniz" });
       }
 
       // Kanalın silinmesi
       await channel.destroy();
 
-      res.json({ message: "Channel deleted successfully" });
+      res.json({ message: "Kanal Başarı ile Silindi" });
    } catch (err) {
       res.status(400).json({ error: err.message });
    }
@@ -643,11 +643,11 @@ router.patch("/leave-channel/:channelId", auth, async (req, res) => {
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy === req.user.id) {
-         return res.status(400).json({ error: "Owner cannot leave the channel" });
+         return res.status(400).json({ error: "Kanal Sahibi Kanaldan Ayrılamaz!" });
       }
 
       // Kullanıcıyı silmek için kanalın üye listesini güncellenmesi
@@ -655,7 +655,7 @@ router.patch("/leave-channel/:channelId", auth, async (req, res) => {
          where: { ChannelId: channelId, UserId: req.user.id },
       });
 
-      res.json({ message: "Left channel successfully" });
+      res.json({ message: "Kanaldan Başarıyla Ayrıldınız" });
    } catch (err) {
       res.status(400).json({ error: err.message });
    }
@@ -772,7 +772,7 @@ router.get("/get-all-users-not-member/:channelId", auth, async (req, res) => {
       // Kanalı bulma
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       // Kullanıcıları bulma
@@ -805,12 +805,12 @@ router.post("/channels/:channelId/subchannels/create", auth, async (req, res) =>
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       const existingSubChannel = await SubChannel.findOne({ where: { channelId, name } });
       if (existingSubChannel) {
-         return res.status(400).json({ error: "Sub-channel with this name already exists" });
+         return res.status(400).json({ error: "Bu İsimde Bir Alt Kanal Bulunmakta!" });
       }
 
       const newSubChannel = await SubChannel.create({ name, topic, channelId });
@@ -836,20 +836,20 @@ router.patch("/channels/:channelId/subchannels/:subChannelId", auth, async (req,
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy !== req.user.id) {
-         return res.status(400).json({ error: "Only the channel owner can update sub-channel details" });
+         return res.status(400).json({ error: "Sadece Kanal Sahibi Alt Kanal Ayarlarını Düzenleyebilir!" });
       }
 
       const subChannel = await SubChannel.findByPk(subChannelId);
       if (!subChannel) {
-         return res.status(404).json({ error: "Sub-channel not found" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       }
 
       if (subChannel.name === "General") {
-         return res.status(400).json({ error: "Cannot update General sub-channel" });
+         return res.status(400).json({ error: "Genel Alt Kanalını Değiştiremezsiniz" });
       }
 
       subChannel.name = name;
@@ -870,12 +870,12 @@ router.get("/channels/:channelId/subchannels/:subChannelId", auth, async (req, r
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       const subChannel = await getSubChannelByIdAndFormat(subChannelId);
       if (!subChannel) {
-         return res.status(404).json({ error: "Sub-channel not found" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       }
 
       res.json(subChannel);
@@ -891,23 +891,23 @@ router.delete("/channels/:channelId/subchannels/:subChannelId", auth, async (req
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy !== req.user.id) {
-         return res.status(400).json({ error: "Only the channel owner can delete the sub-channel" });
+         return res.status(400).json({ error: "Sadece Kanal Sahibi Alt Kanalı Silebilir!" });
       }
 
       const subChannelIndex = SubChannel.findOne({
          id: subChannelId,
       });
       if (!subChannelIndex) {
-         return res.status(404).json({ error: "Sub-channel not found" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       }
 
       // "Genel" alt kanalın silinmesini önleme
       if (subChannelIndex.name === "General") {
-         return res.status(400).json({ error: "Cannot delete the General sub-channel" });
+         return res.status(400).json({ error: "Genel Alt Kanalını Silemezsiniz" });
       }
 
       await SubChannel.destroy({
@@ -938,21 +938,21 @@ router.put("/channels/:channelId/subchannels/:subChannelId", auth, async (req, r
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       if (channel.createdBy === req.user.id) {
-         return res.status(400).json({ error: "Channel owner cannot leave sub-channels" });
+         return res.status(400).json({ error: "Kanal Sahibi Alt Kanallardan Ayrılamaz!" });
       }
 
       const subChannel = await SubChannel.findByPk(subChannelId);
       if (!subChannel) {
-         return res.status(404).json({ error: "Sub-channel not found" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       }
 
       // "Genel" alt kanaıldan ayrılmayı önleme
       if (subChannel.name === "General") {
-         return res.status(400).json({ error: "Cannot leave the General sub-channel" });
+         return res.status(400).json({ error: "Genel Alt Kanalından Ayrılamazsınız!" });
       }
 
       await SubChannelMember.destroy({
@@ -982,7 +982,7 @@ router.put("/join/channels/:channelId/subchannels/:subChannelId", auth, async (r
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       const subChannel = SubChannel.findOne({
@@ -991,7 +991,7 @@ router.put("/join/channels/:channelId/subchannels/:subChannelId", auth, async (r
          },
       });
       if (!subChannel) {
-         return res.status(404).json({ error: "Sub-channel not found" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       }
 
       await SubChannelMember.create({
@@ -1017,7 +1017,7 @@ router.put("/join/channels/:channelId/subchannels/:subChannelId", auth, async (r
 
 router.post("/upload", upload.single("file"), (req, res) => {
    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      return res.status(400).json({ error: "Belge Yüklenmedi" });
    }
 
    // Yüklenen dosya için URL oluşturma
@@ -1034,7 +1034,7 @@ router.post("/channels/:channelId/invite", auth, async (req, res) => {
    try {
       const channel = await Channel.findByPk(channelId);
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found!" });
+         return res.status(404).json({ error: "Kanal Bulunamadı!" });
       }
 
       const memberChannel = await ChannelMember.findOne({
@@ -1045,7 +1045,7 @@ router.post("/channels/:channelId/invite", auth, async (req, res) => {
       });
 
       if (!memberChannel) {
-         return res.status(403).json({ error: "Only members can invite others" });
+         return res.status(403).json({ error: "Sadece Üyeler Davet Gönderebilir" });
       }
 
       // Her kullanıcı için mevcut davetleri kontrol etme
@@ -1063,7 +1063,7 @@ router.post("/channels/:channelId/invite", auth, async (req, res) => {
       const uniqueUsersToInvite = [...new Set(usersToInvite)].filter((user) => !invitedUsers.has(user));
 
       if (uniqueUsersToInvite.length === 0) {
-         return res.status(200).json({ message: "User(s) already invited" });
+         return res.status(200).json({ message: "Kullanıcı(lar) Hali Hazırda Davet Edilmiş Durumda" });
       }
 
       const invites = uniqueUsersToInvite.map((user) => {
@@ -1076,7 +1076,7 @@ router.post("/channels/:channelId/invite", auth, async (req, res) => {
 
       await Invite.bulkCreate(invites);
 
-      res.status(200).json({ message: "User(s) invited successfully" });
+      res.status(200).json({ message: "Kullanıcı(lar)'a Davet Başarıyla Gönderildi" });
    } catch (error) {
       res.status(400).json({ error: error.message });
    }
@@ -1105,11 +1105,11 @@ router.post("/invites/:inviteId/accept", auth, async (req, res) => {
    try {
       const invite = await Invite.findByPk(inviteId);
       if (!invite) {
-         return res.status(404).json({ error: "Invite not found" });
+         return res.status(404).json({ error: "Davet Bulunamadı" });
       }
 
       if (invite.userId !== req.user.id) {
-         return res.status(403).json({ error: "Unauthorized" });
+         return res.status(403).json({ error: "Erişim İzni Yok" });
       }
 
       await Invite.destroy({ where: { id: inviteId } });
@@ -1123,7 +1123,7 @@ router.post("/invites/:inviteId/accept", auth, async (req, res) => {
       });
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       const isMember = await ChannelMember.findOne({
@@ -1139,7 +1139,7 @@ router.post("/invites/:inviteId/accept", auth, async (req, res) => {
          }
       }
 
-      res.status(200).json({ message: "Invite accepted" });
+      res.status(200).json({ message: "Davet Kabul Edildi" });
    } catch (error) {
       res.status(400).json({ error: error.message });
    }
@@ -1152,16 +1152,16 @@ router.post("/invites/:inviteId/reject", auth, async (req, res) => {
    try {
       const invite = await Invite.findByPk(inviteId);
       if (!invite) {
-         return res.status(404).json({ error: "Invite not found" });
+         return res.status(404).json({ error: "Davet Bulunamadı" });
       }
 
       if (invite.userId !== req.user.id) {
-         return res.status(403).json({ error: "Unauthorized" });
+         return res.status(403).json({ error: "Erişim İzni Yok" });
       }
 
       await Invite.destroy({ where: { id: inviteId } });
 
-      res.status(200).json({ message: "Invite rejected", invite });
+      res.status(200).json({ message: "Davet Reddedildi", invite });
    } catch (error) {
       res.status(400).json({ error: error.message });
    }
@@ -1179,12 +1179,12 @@ router.post("/message", auth, async (req, res) => {
       });
 
       if (!channel) {
-         return res.status(404).json({ error: "Channel not found" });
+         return res.status(404).json({ error: "Kanal Bulunamadı" });
       }
 
       const subChannel = channel.SubChannels[0];
       if (!subChannel) {
-         return res.status(404).json({ error: "Sub-channel not found" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       }
 
       const isMember = await SubChannelMember.findOne({
@@ -1194,7 +1194,7 @@ router.post("/message", auth, async (req, res) => {
          },
       });
       if (!isMember) {
-         return res.status(403).json({ error: "User is not a member of this sub-channel" });
+         return res.status(403).json({ error: "Kullanıcı Bu Alt Kanalın Bir Üyesi Değil" });
       }
 
       const newMessage = await Chat.create({
@@ -1221,7 +1221,7 @@ router.post(
    async (req, res) => {
       const { channelId, subChannelId } = req.params;
       if (!req.file) {
-         return res.status(400).json({ error: "No image file uploaded" });
+         return res.status(400).json({ error: "Resim Dosyası Yüklenmedi" });
       }
 
       const serverPath = process.env.IMAGE_PATH_ORIGIN;
@@ -1236,12 +1236,12 @@ router.post(
          });
 
          if (!channel) {
-            return res.status(404).json({ error: "Channel not found" });
+            return res.status(404).json({ error: "Kanal Bulunamadı" });
          }
 
          const subChannel = channel.SubChannels[0];
          if (!subChannel) {
-            return res.status(404).json({ error: "Sub-channel not found" });
+            return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
          }
 
          const isMember = await SubChannelMember.findOne({
@@ -1251,7 +1251,7 @@ router.post(
             },
          });
          if (!isMember) {
-            return res.status(403).json({ error: "User is not a member of this sub-channel" });
+            return res.status(403).json({ error: "Kullanıcı Bu Alt Kanalın Bir Üyesi Değil" });
          }
 
          const newMessage = await Chat.create({
@@ -1279,7 +1279,7 @@ router.post(
    async (req, res) => {
       const { channelId, subChannelId } = req.params;
       if (!req.file) {
-         return res.status(400).json({ error: "No file uploaded" });
+         return res.status(400).json({ error: "Dosya Yüklenmedi" });
       }
 
       const serverPath = process.env.IMAGE_PATH_ORIGIN;
@@ -1294,12 +1294,12 @@ router.post(
          });
 
          if (!channel) {
-            return res.status(404).json({ error: "Channel not found" });
+            return res.status(404).json({ error: "Kanal Bulunamadı" });
          }
 
          const subChannel = channel.SubChannels[0];
          if (!subChannel) {
-            return res.status(404).json({ error: "Sub-channel not found" });
+            return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
          }
 
          const isMember = await SubChannelMember.findOne({
@@ -1309,7 +1309,7 @@ router.post(
             },
          });
          if (!isMember) {
-            return res.status(403).json({ error: "User is not a member of this sub-channel" });
+            return res.status(403).json({ error: "Kullanıcı Bu Alt Kanalın Bir Üyesi Değil" });
          }
 
          const newMessage = await Chat.create({
@@ -1338,12 +1338,12 @@ router.get("/channels/:channelId/subchannels/:subChannelId/messages", auth, asyn
       // });
 
       // if (!channel) {
-      //    return res.status(404).json({ error: "Sub-channel not found" });
+      //    return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       // }
 
       // const subChannel = channel.SubChannels[0];
       // if (!subChannel) {
-      //    return res.status(404).json({ error: "Sub-channel not found" });
+      //    return res.status(404).json({ error: "Alt Kanal Bulunamadı" });
       // }
 
       // const isMember = await SubChannelMember.findOne({
@@ -1351,7 +1351,7 @@ router.get("/channels/:channelId/subchannels/:subChannelId/messages", auth, asyn
       // });
 
       // if (!isMember) {
-      //    return res.status(403).json({ error: "User is not a member of this sub-channel" });
+      //    return res.status(403).json({ error: "Kullanıcı Bu Alt Kanalın Bir Üyesi Değil" });
       // }
 
       const messages = await Chat.findAll({
@@ -1475,12 +1475,12 @@ router.post("/channels/:channelId/subchannels/:subChannelId/leave", auth, async 
       });
 
       if (!subChannelMember) {
-         return res.status(404).json({ error: "Sub-channel not found or user not a member" });
+         return res.status(404).json({ error: "Alt Kanal Bulunamadı ya da Kullanıcı Alt Kanala Üye Değil" });
       }
 
       await subChannelMember.destroy();
 
-      res.json({ message: "Left sub-channel successfully" });
+      res.json({ message: "Alt Kanaldan Başarıyla Ayrıldınız" });
    } catch (error) {
       res.status(400).json({ error: error.message });
    }

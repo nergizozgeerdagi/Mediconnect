@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING,
-      defaultValue: 'defaulttopic'
+      defaultValue: 'Kanal Konusu'
     },
     image: {
       type: DataTypes.STRING,
