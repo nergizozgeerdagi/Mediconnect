@@ -215,7 +215,7 @@
             // Bölüm seçimi için varsayılan seçenek ekleme
             var defaultDepartmentOption = document.createElement('option');
             defaultDepartmentOption.value = '';
-            defaultDepartmentOption.textContent = 'Select Your Department';
+            defaultDepartmentOption.textContent = 'Bölümünüzü Seçiniz';
             defaultDepartmentOption.disabled = true;
             defaultDepartmentOption.selected = true;
             departmentSelect.appendChild(defaultDepartmentOption);
@@ -237,7 +237,7 @@
             // Varsayılan yıl seçeneği ekleme
             var defaultYearOption = document.createElement('option');
             defaultYearOption.value = '';
-            defaultYearOption.textContent = 'Select Your Year';
+            defaultYearOption.textContent = 'Sınıfınızı Seçiniz';
             defaultYearOption.disabled = true;
             defaultYearOption.selected = true;
             yearSelect.appendChild(defaultYearOption);
@@ -254,6 +254,8 @@
          });
 
       });
+
+     
    </script>
 
    <script src="/signup.js"></script>

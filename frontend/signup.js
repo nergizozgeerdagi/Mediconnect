@@ -9,6 +9,20 @@ $(document).ready(function () {
       const department = $("#department").val();
       const year = $("#year").val();
 
+
+      const emailPattern = /^[^@\s]+@std\.ankaramedipol\.edu\.tr$/;
+      const passwordPattern = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
+
+        if (!emailPattern.test(email)) {
+            alert("Lütfen sadece @std.ankaramedipol.edu.tr uzantılı bir e-posta adresi kullanın.");
+            return false; // Yanlış kullanımda form iletimini durdurma
+        }
+
+        if (!passwordPattern.test(password)) {
+         alert("Şifre 8-20 karakter uzunluğunda olmalı ve en az bir özel karakter içermelidir.");
+         return false; // Stop form submission
+     }
+
       $.ajax({
          url: "http://127.0.0.1:3002/api/signup",
          method: "POST",
